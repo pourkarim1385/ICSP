@@ -10,5 +10,5 @@ Important Note: make sure that your file name is: **program1.c**
 
 and run files as admin to prevent program crashes.
 
-ooptimized for "gcc (MinGW.org GCC-6.3.0-1) 6.3.0"
-there is also .c files you can compiler yourselves.
+optimized for "gcc (MinGW.org GCC-6.3.0-1) 6.3.0" </br>
+there is also .c files you can compile yourselves.
