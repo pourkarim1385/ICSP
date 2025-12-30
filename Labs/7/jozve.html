@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>جزوه توابع تخصیص حافظه در C</title>
+    <style>
+        body {
+            font-family: Vazirmatn, Tahoma, Arial, sans-serif;
+            line-height: 1.9;
+            direction: rtl;
+            margin: 40px;
+            background-color: #ffffff;
+            color: #000;
+        }
+        h1, h2, h3 {
+            color: #1a1a1a;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        code {
+            background-color: #f7f7f7;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            direction: ltr;
+        }
+        pre {
+            background-color: #f7f7f7;
+            padding: 15px;
+            border-radius: 6px;
+            direction: ltr;
+            overflow-x: auto;
+        }
+        .note {
+            background-color: #fff3cd;
+            border-right: 6px solid #ffcc00;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        .danger {
+            background-color: #f8d7da;
+            border-right: 6px solid #dc3545;
+            padding: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>جزوه خلاصه توابع تخصیص حافظه در C</h1>
+<p>مناسب برای مرور شب امتحان – خلاصه، جدولی، با نکات تله‌ای</p>
+
+<hr>
+
+<h2>📌 جدول مقایسه‌ای اصلی</h2>
+
+<table>
+    <tr>
+        <th>تابع</th>
+        <th>کار اصلی</th>
+        <th>مقداردهی اولیه</th>
+        <th>ورودی‌ها</th>
+        <th>خروجی</th>
+    </tr>
+    <tr>
+        <td>malloc</td>
+        <td>تخصیص حافظه</td>
+        <td>❌ ندارد</td>
+        <td>size</td>
+        <td>pointer / NULL</td>
+    </tr>
+    <tr>
+        <td>calloc</td>
+        <td>تخصیص + صفر کردن</td>
+        <td>✅ صفر</td>
+        <td>count , size</td>
+        <td>pointer / NULL</td>
+    </tr>
+    <tr>
+        <td>realloc</td>
+        <td>تغییر اندازه حافظه</td>
+        <td>❌ ندارد</td>
+        <td>ptr , new_size</td>
+        <td>pointer جدید / NULL</td>
+    </tr>
+</table>
+
+<h2>📌 سینتکس استاندارد</h2>
+
+<h3>🔹 malloc</h3>
+<pre>
+type *p = malloc(n * sizeof(type));
+</pre>
+
+<h3>🔹 calloc</h3>
+<pre>
+type *p = calloc(n, sizeof(type));
+</pre>
+
+<h3>🔹 realloc</h3>
+<pre>
+p = realloc(p, new_size);
+</pre>
+
+<h2>📌 مثال‌های متداول</h2>
+
+<pre>
+int *p = malloc(10 * sizeof(int));
+int *q = calloc(10, sizeof(int));
+p = realloc(p, 20 * sizeof(int));
+</pre>
+
+<h2>📌 رفتارهای خاص (تله‌های امتحانی)</h2>
+
+<div class="note">
+<b>realloc با NULL:</b><br>
+<code>realloc(NULL, size)</code> دقیقاً مثل <code>malloc(size)</code> عمل می‌کند.
+</div>
+
+<div class="danger">
+<b>دسترسی خارج از محدوده:</b><br>
+<code>p[15]</code> وقتی فقط ۱۰ خانه داریم → Undefined Behavior
+</div>
+
+<div class="danger">
+<b>استفاده بعد از free:</b><br>
+حافظه آزاد شده ولی آدرس هنوز در پوینتر است → استفاده ممنوع
+</div>
+
+<h2>📌 الگوی صحیح استفاده از realloc</h2>
+
+<pre>
+int *tmp = realloc(p, new_size);
+if (tmp != NULL) {
+    p = tmp;
+}
+</pre>
+
+<h2>📌 جدول خلاصه نهایی ⭐</h2>
+
+<table>
+    <tr>
+        <th>تابع</th>
+        <th>صفر می‌کند؟</th>
+        <th>تغییر اندازه؟</th>
+        <th>نیاز به free</th>
+    </tr>
+    <tr>
+        <td>malloc</td>
+        <td>❌</td>
+        <td>❌</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>calloc</td>
+        <td>✅</td>
+        <td>❌</td>
+        <td>✅</td>
+    </tr>
+    <tr>
+        <td>realloc</td>
+        <td>❌</td>
+        <td>✅</td>
+        <td>❌ (اگر موفق باشد)</td>
+    </tr>
+</table>
+
+<h2>📌 نکات حفظی سریع</h2>
+
+<ul>
+    <li>malloc → سریع، بدون مقداردهی</li>
+    <li>calloc → صفر می‌کند</li>
+    <li>realloc → ممکن است آدرس عوض شود</li>
+    <li>بعد از free → پوینتر را NULL کن</li>
+    <li>Out of bounds → همیشه UB</li>
+</ul>
+
+<hr>
+<p><b>پایان جزوه</b></p>
+
+</body>
+</html>
