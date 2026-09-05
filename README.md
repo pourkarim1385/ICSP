@@ -1,4 +1,4 @@
-# Introduction to Computer Science and Programming (ICSP)
+# ICSP
 
 This repository contains academic coursework, laboratory assignments, and the final course project completed for the Introduction to Computer Science and Programming course.
 
